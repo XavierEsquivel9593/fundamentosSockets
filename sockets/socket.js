@@ -1,18 +1,40 @@
-const{io}= require('../app');
+const { io }= require('../app');
+const {TicketControl} = require('../classes/ticket-control');
+
+const controlTicket = new TicketControl;
+
 io.on('connection', (client) => {
     console.log('usuario conectdo');
-    client.on('disconnect', () => {
-        console.log('el usuario se desconecto');
+
+    client.on('siguienteTicket',(data,callback)=>{
+        let siguiente = controlTicket.siguiente();
+        console.log(siguiente);
+        client.emit('siguienteTicket',siguiente);
     });
-    client.on('enviarMensaje', (data, callback) => {
-        console.log(data);
-        client.broadcast.emit('enviarMensaje', data);
+
+    client.emit('estadoActual',{
+        actual: controlTicket.getUtlimoTicket(),
+        ultimos4: controlTicket.getUtimos4()
+    })
+
+    client.on('atenderTicket',({escritorio},callback)=>{
+        if(!escritorio){
+            return callback({
+                ok:false,
+                msj: 'No hay tickets'
+            });
+        }
+        let atenderTicket = controlTicket.atenderTicket(escritorio);
+        callback({
+            ok: true,
+            atenderTicket
+        });
+        client.broadcast.emit('ultimos4',{
+            ultimos4: controlTicket.getUtimos4()
+        });
     });
-    //enviar 
-    client.emit('enviarMensaje', {
-        asunto: "hola",
-        hora: new Date().getFullYear()
-    });
-    //new Date().getTime()
+    //actualizar, notificar cambios en los ultimos 4
+
 
 });
+//nodemon app -e js, html
