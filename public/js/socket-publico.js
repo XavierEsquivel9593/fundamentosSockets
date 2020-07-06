@@ -9,7 +9,7 @@ var lblEscritorio1 = $('#lblEscritorio1');
 var lblEscritorio2 = $('#lblEscritorio2');
 var lblEscritorio3 = $('#lblEscritorio3');
 var lblEscritorio4 = $('#lblEscritorio4');
-
+let x;
 var lnlTickets = [lblTicket1, lblTicket2, lblTicket3, lblTicket4];
 var lblEscritorios = [lblEscritorio1, lblEscritorio2, lblEscritorio3, lblEscritorio4];
 
